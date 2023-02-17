@@ -340,14 +340,109 @@ public class SintacticoSemantico {
    String terminales[] = {"id", "num", "num.num", "(","literal"};
     ArrayList<String> primerosCondicion = new ArrayList<String>(Arrays.asList(terminales));
         
-    if (primerosCondicion.contains(preAnalis))
+    if (primerosCondicion.contains(preAnalisis))
     {
       expresion();
       emparejar("oprel");
       expresion();
-    }
-   } 
+    }else
+        error();
+   }
+   
+   private void expresion(){
+   String terminales[] = {"id", "num", "num.num", "("};
+    ArrayList<String> primerosExpresion = new ArrayList<String>(Arrays.asList(terminales));
+        
+    if (primerosExpresion.contains(preAnalisis))
+        {
+          termino();
+          expresion_prima(); 
+        }else 
+    if (preAnalisis.equals("literal"))
+        emparejar("literal");
+    else 
+        error();
+    
+   }
 
+    private void expresion_prima()
+    { 
+        if(preAnalisis.equals("opsuma"))
+         {
+            emparejar("opsuma");
+            termino();
+            expresion_prima();
+
+         }else
+       //empty
+
+    }     
+  
+    private void termino()
+    {
+    String terminales[] = {"id", "num", "num.num", "("};
+    ArrayList<String> primerosTermino = new ArrayList<String>(Arrays.asList(terminales));
+        
+    if (primerosTermino.contains(preAnalisis))
+       {
+         factor();
+         termino_prima();
+       }else 
+     error(); 
+    
+    }  
+
+     private void termino_prima()
+    {
+    if(preAnalisis.equals("opmult"))
+        {
+            emparejar("opmult");
+            factor();
+            termino_prima();
+        }else
+        //empty
+    }
+   
+
+    private void factor()
+    {
+        if(preAnalisis.equals("id"))
+            {
+                emparejar("id");
+                factor_prima();
+            }else if(preAnalisis.equals("num"))
+                   emparejar("num");
+             else if(preAnalisis.equals("num.num"))
+                   emparejar("num.num");
+             else if(preAnalisis.equals("("))
+            {
+                emparejar("(");
+                expresion();
+                emparejar(")");
+            }else 
+                error();
+    }
+
+   private void factor_prima()
+    {
+       if(preAnalisis.equals("("))
+        {
+        emparejar("(");
+        lista_expresiones();
+        emparejar(")");
+        }else
+        //empty
+
+    }
+
+    private void emparejar(complex t)
+    {
+      if(preAnalisis.equals(t))
+            preAnalisis = sigcomplex;
+      else
+          error();
+    }
+ 
 }
 //------------------------------------------------------------------------------
 //::
