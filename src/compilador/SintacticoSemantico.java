@@ -129,8 +129,7 @@ public class SintacticoSemantico {
     private void lista_expresiones(){
         //lista_expresiones → expresion lista_expresiones’ | ϵ
         String terminales[] = {"id", "num", "num.num", "(", "literal"};
-        ArrayList<String> primerosListaExpresiones = new ArrayList<String>(Arrays.asList(terminales));
-        if(primerosListaExpresiones.contains(preAnalisis)){
+        if(estaEn(terminales)){
             expresion();
             lista_expresiones_prima();
         }
@@ -138,9 +137,105 @@ public class SintacticoSemantico {
     }
     
     private void lista_expresiones_prima(){
+        //lista_expresiones’  →  ,  expresion lista_expresiones’  | ϵ
         if(preAnalisis.equals(",")){
-            
+            emparejar(",");
+            expresion();
+            lista_expresiones_prima();
         }
+        //empty
+    }
+    
+    private void condicion(){
+        //condicion → expresion  oprel   expresion
+        String terminales[] = {"id", "num", "num.num", "(", "literal"};
+        if(estaEn(terminales)){
+           expresion();
+           emparejar("oprel");
+           expresion();
+        }
+        else{
+            error("Sintax error");
+        }
+    }
+    
+    private void expresion(){
+         //expresion → termino  expresion’ |  literal
+         String terminales[] = {"id", "num", "num.num", "("};
+         if(estaEn(terminales)){
+             termino();
+             expresion_prima();
+         }
+         else if(preAnalisis.equals("opsuma")){
+             emparejar("literal");
+         }
+         else{
+             error("Sintax error");
+         }
+    }
+  
+    private void expresion_prima(){
+        //expresion’ → opsuma termino expresion’  | ϵ
+        if(preAnalisis.equals("opsuma")){
+            emparejar("opsuma");
+            termino();
+            expresion_prima();
+        }
+    }
+    
+    private void termino(){
+        //termino → factor   termino’
+        String terminales[] = {"id", "num", "num.num", "("};
+        if(estaEn(terminales)){
+            factor();
+            termino_prima();
+        }
+        else{
+            error("Syntax error");
+        }
+    }
+    
+    private void termino_prima(){
+        //termino’ → opmult  factor  termino’ | ϵ
+        if(preAnalisis.equals("opmult")){
+            emparejar("opmult");
+            factor();
+            termino_prima();
+        }
+        //empty
+    }
+    
+    private void factor(){
+        //factor → id  factor’ | num | num.num  |  ( expresion )
+        if(preAnalisis.equals("id")){
+            emparejar("id");
+            factor_prima();
+        }
+        else if(preAnalisis.equals("num"))
+            emparejar("num");
+        else if(preAnalisis.equals("num.num"))
+            emparejar("num.num");
+        else if(preAnalisis.equals("(")){
+            emparejar("(");
+            expresion();
+            emparejar(")");
+        }
+        else{
+            error("Syntax error");
+        }
+    }
+    
+    private void factor_prima(){
+        //factor’ → ( lista_expresiones ) | ϵ
+        if(preAnalisis.equals("(")){
+            emparejar("(");
+            lista_expresiones();
+            emparejar(")");
+        }
+        //empty
+    }
+    private boolean estaEn(String[] terminales){
+        return Arrays.asList(terminales).contains(preAnalisis);
     }
 }
 //------------------------------------------------------------------------------
