@@ -116,12 +116,51 @@ public class SintacticoSemantico {
     //--------------------------------------------------------------------------
     //  *  *   *   *    PEGAR AQUI EL CODIGO DE LOS PROCEDURES  *  *  *  *
     //--------------------------------------------------------------------------
+    private void programa(){
+    //
+    String terminales[] = {"dim", "function", "sub", "id", "call","if","do"};
+    ArrayList<String> primerosPrograma = new ArrayList<String>(Arrays.asList(terminales));
+        
+    if (primerosPrograma.contains(preAnalis))
+        {
+            declaraciones();
+           declaraciones_subprogramas();
+           emparejar("end");
+        }
+    } else
+        error();
+
+    private void declaraciones(){
+    //
+    if preAnalisis.equals("dim")
+      {
+       emparejar("dim");
+       lista_declaraciones();
+       declaraciones();
+      }
+    else
+     //empty
+     }
+
+    private void lista_declaraciones();
+    {
+    if(preanalisis.equals("id"))
+      {
+       emparejar("id");
+       emparejar ("as");
+       tipo();
+       lista_declaraciones_prima();
+      }
+      else
+           error();
+    }
+       
     private void proposicion_prima(){
         //proposicion’ → ( lista_expresiones ) | ϵ
         if(preAnalisis.equals('(') ){
             emparejar("(");
             lista_expresiones();
-            emparejar(")");
+             emparejar(")");
         }
         //empty
     }
@@ -134,14 +173,181 @@ public class SintacticoSemantico {
             expresion();
             lista_expresiones_prima();
         }
-        //empty
-    }
+        //empty    
+}
     
     private void lista_expresiones_prima(){
         if(preAnalisis.equals(",")){
-            
-        }
+            emparejar(",");
+            lista_declaraciones();
+        }            
     }
+   
+    private void tipo()
+    {
+     if(preAnalisis.equals("integer"))
+        emparejar("integer");
+     if(preAnalisis.equals("single"))
+        emparejar("single");
+     if(preAnalisis.equals("string"))
+        emparejar("string");
+     else
+        error();
+    }
+
+     private void declaraciones_subprogramas()
+    {
+      if(preAnalisis.equals("function"))
+          declaracion_funcion();
+      else if(preAnalisis.equals("sub"))
+          declaracion_subrutina();
+      else
+          error();
+    } 
+
+     private void declaracion_funcion()
+     {
+      if(preAnalisis.equals("function"))
+      {
+       emparejar("function");
+       emparejar("id");
+       argumentos();
+       emparejar("as");
+       tipo();
+       proposiciones_optativas();
+       emparejar("end");
+       emparejar("function");
+      }else
+        error();
+
+    }  
+
+    private void declaracion_subrutina()
+    {
+     if(preAnalisis.equals("sub")){
+        emparejar("sub");
+        emparejar("id");
+        argumentos();
+        emparejar("as");
+        tipo();
+        proposiciones_optativas();
+        emparejar("end");
+        emparejar("sub");
+     }else
+         error();    
+    }
+   
+    private void argumentos()
+    {
+       if(preAnalis.equals("("))
+         {
+           emparejar("(");
+           lista_declaraciones();
+           emparejar(")");
+         }
+    }
+    
+    private void proposiciones_optativas()
+    {
+     String terminales[] = {"id", "call", "if", "do"};
+    ArrayList<String> primerosPropOpta = new ArrayList<String>(Arrays.asList(terminales));
+        
+    if (primerosPropOpta.contains(preAnalis))
+        {
+         proposicion();
+         poroposiciones_optativas();
+        }
+    else
+        error()
+
+    } 
+   
+    private void proposicion()
+    {   
+      if(preAnalisis.equals("id"))
+       {
+        emparejar("id");
+        emparejar("opasig");
+        expresion();
+       }else if(preAnalisis.equals("call"))
+       {
+        emparejar("call");
+        emparejar("id");
+        proposicion_prima();
+       }else if(preAnalisis.equals("if"))
+       {
+        emparejar("if");
+        condicion();
+        emparejar("then");
+        proposiciones_optativas();
+        emparejar("else");
+        proposiciones_optativas();
+        emparejar("end");
+        emparejar("if");
+       } if(preAnalisis.equals("do"))
+       {
+        emparejar("do");
+        emparejar("while");
+        condicion();
+        proposiciones_optativas();
+        emparejar("loop");
+       }else
+        error();
+
+
+    }  
+    private void propsicion_prima()
+    {
+     if(preAnalisis.equals("("))
+       {
+         emparejar("(");
+         lista_expresiones();
+         emparejar(")"); 
+       } 
+      else
+       //empty
+
+    }
+
+
+   private void lista_expresiones()
+   {
+    String terminales[] = {"id", "num", "num.num", "(","literal"};
+    ArrayList<String> primerosListaExp = new ArrayList<String>(Arrays.asList(terminales));
+        
+    if (primerosListaExp.contains(preAnalis))
+       {
+        expresion();
+        lista_expresiones_prima();
+       }else
+    //empty 
+      
+   } 
+   private void  lista_expresiones_prima()
+   {
+      if(preAnalisis.equals(","))
+       {
+        emparejar(",");
+        expresion();
+        lista_expresiones();
+       }else
+       // empty 
+ 
+   }
+   
+
+   private void condicion(){
+   String terminales[] = {"id", "num", "num.num", "(","literal"};
+    ArrayList<String> primerosCondicion = new ArrayList<String>(Arrays.asList(terminales));
+        
+    if (primerosCondicion.contains(preAnalis))
+    {
+      expresion();
+      emparejar("oprel");
+      expresion();
+    }
+   } 
+
 }
 //------------------------------------------------------------------------------
 //::
