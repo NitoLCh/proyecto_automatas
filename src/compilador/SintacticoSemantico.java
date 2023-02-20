@@ -127,7 +127,7 @@ public class SintacticoSemantico {
             proposiciones_optativas();
             emparejar("end");
         } else {
-            error("Syntax error");
+            error("Syntax error: El archivo no tiene end");
         }
     }
 
@@ -149,7 +149,8 @@ public class SintacticoSemantico {
             tipo();
             lista_declaraciones_prima();
         } else {
-            error("syntax error");
+            error(String.format("syntax error in line %s: Mala declaracion de variables",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
     
@@ -200,7 +201,8 @@ public class SintacticoSemantico {
             emparejar("oprel");
             expresion();
         } else {
-            error("Sintax error");
+            error(String.format("syntax error in line %s: Condición no válida",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -213,7 +215,8 @@ public class SintacticoSemantico {
         } else if (preAnalisis.equals("literal")) {
             emparejar("literal");
         } else {
-            error("Sintax error");
+            error(String.format("syntax error in line %s: Expersión no válida",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -234,7 +237,8 @@ public class SintacticoSemantico {
             factor();
             termino_prima();
         } else {
-            error("Syntax error");
+            error(String.format("syntax error in line %s: Expresión inválida",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -262,7 +266,8 @@ public class SintacticoSemantico {
             expresion();
             emparejar(")");
         } else {
-            error("Syntax error");
+            error(String.format("syntax error in line %s: Expresión inválida",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -286,7 +291,8 @@ public class SintacticoSemantico {
         else if (preAnalisis.equals("string")) {
             emparejar("string");
         } else {
-            error("Syntax error");
+            error(String.format("syntax error in line %s: Tipo de dato inválido",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -310,7 +316,8 @@ public class SintacticoSemantico {
             declaracion_subrutina();
         }
         else{
-            error("Syntax error");
+            error(String.format("syntax error in line %s: Mala declaración de subrprograma",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -326,7 +333,8 @@ public class SintacticoSemantico {
             emparejar("end");
             emparejar("function");
         } else {
-            error("Syntax error");
+            error(String.format("syntax error in line %s: Mala declaración de función",
+                    cmp.be.preAnalisis.numLinea));
         }
 
     }
@@ -341,7 +349,8 @@ public class SintacticoSemantico {
             emparejar("end");
             emparejar("sub");
         } else {
-            error("Syntax Error");
+            error(String.format("syntax error in line %s: Mala declaración de subrutina.",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
@@ -395,7 +404,8 @@ public class SintacticoSemantico {
             proposiciones_optativas();
             emparejar("loop");
         } else {
-            error("");
+            error(String.format("syntax error in line %s: Expresión inválida",
+                    cmp.be.preAnalisis.numLinea));
         }
     }
 
