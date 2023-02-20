@@ -120,11 +120,11 @@ public class SintacticoSemantico {
     //    declaraciones_subprogramas
     //    proposiciones_optativas
     //    end
-        String terminales[] = {"dim", "function", "sub", "id", "call", "if", "do"};
-        
+        String terminales[] = {"dim", "function", "sub", "id", "call", "if", "do", "end"};
         if (estaEn(terminales)) {
             declaraciones();
             declaraciones_subprogramas();
+            proposiciones_optativas();
             emparejar("end");
         } else {
             error("Syntax error");
@@ -210,7 +210,7 @@ public class SintacticoSemantico {
         if (estaEn(terminales)) {
             termino();
             expresion_prima();
-        } else if (preAnalisis.equals("opsuma")) {
+        } else if (preAnalisis.equals("literal")) {
             emparejar("literal");
         } else {
             error("Sintax error");
@@ -283,7 +283,7 @@ public class SintacticoSemantico {
         } else if (preAnalisis.equals("single")) {
             emparejar("single");
         }
-        if (preAnalisis.equals("string")) {
+        else if (preAnalisis.equals("string")) {
             emparejar("string");
         } else {
             error("Syntax error");
@@ -292,13 +292,13 @@ public class SintacticoSemantico {
 
     private void declaraciones_subprogramas() {
         //declaraciones_subprogramas → declaracion_subprograma  declaraciones_subprogramas  | ϵ
-        if (preAnalisis.equals("function")) {
-            declaracion_funcion();
-        } else if (preAnalisis.equals("sub")) {
-            declaracion_subrutina();
-        } else {
-            error("Syntax Error");
+        String terminales[] = {"function", "sub"};
+        
+        if(estaEn(terminales)){
+            declaracion_subprograma();
+            declaraciones_subprogramas();
         }
+        //empty
     }
     
     private void declaracion_subprograma(){
@@ -307,7 +307,7 @@ public class SintacticoSemantico {
             declaracion_funcion();
         }
         else if(preAnalisis.equals("sub")){
-            declaracion_funcion();
+            declaracion_subrutina();
         }
         else{
             error("Syntax error");
@@ -337,8 +337,6 @@ public class SintacticoSemantico {
             emparejar("sub");
             emparejar("id");
             argumentos();
-            emparejar("as");
-            tipo();
             proposiciones_optativas();
             emparejar("end");
             emparejar("sub");
@@ -364,7 +362,7 @@ public class SintacticoSemantico {
             proposicion();
             proposiciones_optativas();
         } else {
-            error("Syntax Error");
+            //empty
         }
     }
 
@@ -390,7 +388,7 @@ public class SintacticoSemantico {
             emparejar("end");
             emparejar("if");
         }
-        if (preAnalisis.equals("do")) {
+        else if (preAnalisis.equals("do")) {
             emparejar("do");
             emparejar("while");
             condicion();

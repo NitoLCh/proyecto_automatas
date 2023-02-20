@@ -124,7 +124,7 @@ public class Automata {
                         if ((lenguaje="\n").indexOf(c)>=0)
                           oAnaLex.setNoLinea ( oAnaLex.getNoLinea() + 1 );    // FGil: Incrementa el num de linea
                     }  else 
-                    if ((lenguaje="!\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\f").indexOf(c)>=0) _edoAct=2;  else 
+                    if ((lenguaje="!\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\f").indexOf(c)>=0) _edoAct=2;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -210,7 +210,7 @@ public class Automata {
                     if ((lenguaje="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").indexOf(c)>=0)  _edoAct=14;  else 
                     if ((lenguaje="_").indexOf(c)>=0)  _edoAct=14;  else 
                     if ((lenguaje="0123456789").indexOf(c)>=0)  _edoAct=14;  else 
-                    if ((lenguaje=" !\"#$%&\'()*+,-./:;<=>?@[\\]^`{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=15;  else 
+                    if ((lenguaje=" !\"#$%&\'()*+,-./:;<=>?@[\\]^`{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=15;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -219,7 +219,7 @@ public class Automata {
        //--------------  Automata  Literal--------------
       case 16 : c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
-                    if ((lenguaje="\'").indexOf(c)>=0)  _edoAct=17;  else 
+                    if ((lenguaje="\"").indexOf(c)>=0)  _edoAct=17;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -233,9 +233,9 @@ public class Automata {
                     break;
       case 18 : c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
-                    if ((lenguaje="\'").indexOf(c)>=0)  _edoAct=19;  else 
+                    if ((lenguaje="\"").indexOf(c)>=0)  _edoAct=19;  else 
                     if ((lenguaje="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").indexOf(c)>=0)  _edoAct=18;  else 
-                    if ((lenguaje=" _!#$%&()*+,-./:;<=>?@[\\]^`{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿").indexOf(c)>=0)  _edoAct=18;  else 
+                    if ((lenguaje=" _!#$%&()*+,-./:;<=>?@[\\]^`{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿").indexOf(c)>=0)  _edoAct=18;  else 
                     if ((lenguaje="0123456789").indexOf(c)>=0)  _edoAct=18;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
@@ -273,7 +273,7 @@ public class Automata {
                     oAnaLex.setI(oAnaLex.getI()+1);
                     if ((lenguaje="0123456789").indexOf(c)>=0)  _edoAct=29;  else 
                     if ((lenguaje=".").indexOf(c)>=0) _edoAct=30;  else 
-                    if ((lenguaje=" !\"#$%&\'()*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=30;  else 
+                    if ((lenguaje=" !\"#$%&\'()*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=30;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -296,7 +296,7 @@ public class Automata {
                     oAnaLex.setI(oAnaLex.getI()+1);
                     if ((lenguaje=".").indexOf(c)>=0) _edoAct=34;  else 
                     if ((lenguaje="0123456789").indexOf(c)>=0)  _edoAct=33;  else 
-                    if ((lenguaje=" !\"#$%&\'()*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=34;  else 
+                    if ((lenguaje=" !\"#$%&\'()*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=34;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -319,7 +319,7 @@ public class Automata {
       case 37 : c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
                     if ((lenguaje=".").indexOf(c)>=0) _edoAct=38;  else 
-                    if ((lenguaje=" !\"#$%&\'()*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=38;  else 
+                    if ((lenguaje=" !\"#$%&\'()*+,-/:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=38;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -335,7 +335,7 @@ public class Automata {
       case 40 : c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
                     if ((lenguaje="0123456789").indexOf(c)>=0)  _edoAct=40;  else 
-                    if ((lenguaje=" !\"#$%&\'()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=41;  else 
+                    if ((lenguaje=" !\"#$%&\'()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿\n\t\r\f").indexOf(c)>=0) _edoAct=41;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
@@ -369,7 +369,6 @@ public class Automata {
        //--------------  Automata  Oprel2--------------
       case 46 : c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
-                   if ((lenguaje="=").indexOf(c)>=0)  _edoAct=47;  else  
                    if ((lenguaje=">").indexOf(c)>=0)  _edoAct=47;  else 
                     if ((lenguaje="<").indexOf(c)>=0)  _edoAct=47;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
@@ -412,17 +411,11 @@ public class Automata {
           //--------------  Automata  Opasig--------------
       case 53: c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
-                    if ((lenguaje=":").indexOf(c)>=0)  _edoAct=54;  else
+                    if ((lenguaje="=").indexOf(c)>=0)  _edoAct=54;  else
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
                     break;
-      case 54 : c=SigCar(oAnaLex.getI());
-                    oAnaLex.setI(oAnaLex.getI()+1);
-                    if ((lenguaje="=").indexOf(c)>=0)  _edoAct=59;  else 
-                     { oAnaLex.setI(oAnaLex.getIniToken());
-                          return false; }
-                    break;          
-      case 59 : return true;
+      case 54 : return true;
        //--------------  Automata  Caracter --------------
       case 55 : c=SigCar(oAnaLex.getI());
                     oAnaLex.setI(oAnaLex.getI()+1);
@@ -434,7 +427,7 @@ public class Automata {
                     oAnaLex.setI(oAnaLex.getI()+1);
                     if ((lenguaje="\"").indexOf(c)>=0)  _edoAct=57;  else 
                     if ((lenguaje="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").indexOf(c)>=0)  _edoAct=57;  else 
-                    if ((lenguaje=" _!#$%&()*+,-./:;<=>?@[\\]^`{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿").indexOf(c)>=0)  _edoAct=57;  else 
+                    if ((lenguaje=" _!#$%&()*+,-./:;<=>?@[\\]^`{|}~€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿").indexOf(c)>=0)  _edoAct=57;  else 
                     if ((lenguaje="0123456789").indexOf(c)>=0)  _edoAct=57;  else 
                      { oAnaLex.setI(oAnaLex.getIniToken());
                           return false; }
