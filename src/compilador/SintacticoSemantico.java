@@ -370,7 +370,7 @@ public class SintacticoSemantico {
         if (estaEn(terminales)) {
             proposicion();
             proposiciones_optativas();
-        } else {
+            } else {
             //empty
         }
     }
