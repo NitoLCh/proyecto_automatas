@@ -3,7 +3,7 @@
  *:                     INGENIERIA EN SISTEMAS COMPUTACIONALES
  *:                         LENGUAJES Y AUTOMATAS II           
  *: 
- *:        SEMESTRE: ______________            HORA: ______________ HRS
+ *:        SEMESTRE: ___________            HORA: ______________ HRS
  *:                                   
  *:               
  *:	       # Clase que representa al Buffer de entrada del compilador *                 
@@ -19,10 +19,12 @@
  *: Ult.Modif.    :
  *:  Fecha      Modificó            Modificacion
  *:=============================================================================
- *: 22/Feb/2015 FGil               -Se crearon setPtr() y getPrt (). Cada fila del  
- *:                                 buffer tiene ahora 4 columnas, la 4a es el numero
- *:                                 de renglon del codigo fuente.
- *: 08/Sep/2015 FGil               -Se agrego el metodo anterior ().
+ *: 22/Feb/2015 FGil                      -Se crearon setPtr() y getPrt (). Cada fila del  
+ *:                                       buffer tiene ahora 4 columnas, la 4a es el numero
+ *:                                       de renglon del codigo fuente.
+ *: 08/Sep/2015 FGil                      -Se agrego el metodo anterior ().
+ *: 20/Feb/2023 Jorge Ledesma 19130930    -Se agregaron las palabras reservadas
+ *:             David Pruneda 19130960s
  *:-----------------------------------------------------------------------------
  */
 
