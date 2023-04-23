@@ -62,11 +62,6 @@ public class SintacticoSemantico {
         String [] partes = tipo.split("->");
         return partes[1];
     }
-    
-    public String getArgumentos(String tipo){
-        String [] argumentos = tipo.split("x");
-        return argumentos[0];
-    }
 
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
@@ -212,13 +207,12 @@ public class SintacticoSemantico {
             if(analizarSemantica){
                 if(cmp.ts.buscaTipo(id.entrada).equals("")){
                     cmp.ts.anadeTipo(id.entrada, tipo.tipo);
-                    if(!lista_declaraciones_prima.tipo.equals(ERROR_TIPO)){
+                    if(lista_declaraciones_prima.tipo.equals(VACIO)){
                         lista_declaraciones.tipo = tipo.tipo;
                     } 
                     else if(!lista_declaraciones.tipo.equals(ERROR_TIPO)){
                         lista_declaraciones.tipo = tipo.tipo + "x" + lista_declaraciones_prima.tipo;
-                    }
-                    else{
+                    }else{
                         lista_declaraciones.tipo = ERROR_TIPO;
                         cmp.me.error(Compilador.ERR_SEMANTICO, "{4} : lista_declaraciones = ERROR_TIPO");
                     }
@@ -522,7 +516,7 @@ public class SintacticoSemantico {
                 if(factor_prima.tipo.equals(VACIO)){
                     factor.tipo = cmp.ts.buscaTipo(id.entrada);
                 }else if(getDominio(cmp.ts.buscaTipo(id.entrada))
-                        .equals(getArgumentos(factor_prima.tipo)))
+                        .equals(factor_prima.tipo))
                     factor.tipo = getRango(cmp.ts.buscaTipo(id.entrada));
                 else {
                     factor.tipo = ERROR_TIPO;
@@ -795,7 +789,8 @@ public class SintacticoSemantico {
                 if(cmp.ts.buscaTipo(id.entrada).equals(expresion.tipo)){
                     proposicion.tipo = VACIO;
                 }
-                else if(cmp.ts.buscaTipo(id.entrada).equals("SINGLE") && expresion.tipo.equals("INTEGER")){
+                else if( (cmp.ts.buscaTipo(id.entrada).equals("SINGLE") && expresion.tipo.equals("INTEGER")) ||
+                        (cmp.ts.buscaTipo(id.entrada).equals("SINGLE") && getRango(expresion.tipo).equals("INTEGER"))){
                     proposicion.tipo = VACIO;
                 }
                 else{
