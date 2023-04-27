@@ -60,7 +60,9 @@ public class SintacticoSemantico {
     
     public String getRango (String tipo) {
         String [] partes = tipo.split("->");
-        return partes[1];
+        if(partes.length > 1)
+            return partes[1];
+        return partes[0];
     }
 
     //--------------------------------------------------------------------------
@@ -467,6 +469,8 @@ public class SintacticoSemantico {
             factor(factor);
             //Acción Semántica 22
             if(analizarSemantica){
+                System.out.println("Factor.tipo = " + factor.tipo);
+                //System.out.println("getRango.tipo = " + getRango(factor.tipo));
                 if(termino_prima.h.equals(factor.tipo)){
                     termino_prima2.h = factor.tipo;
                 }
@@ -513,14 +517,19 @@ public class SintacticoSemantico {
             factor_prima(factor_prima);
             //Acción Semántica 25
             if(analizarSemantica){
+                System.out.println("factor prima: " + factor_prima.tipo);
                 if(factor_prima.tipo.equals(VACIO)){
                     factor.tipo = cmp.ts.buscaTipo(id.entrada);
+                    System.out.println("tipo: " + cmp.ts.buscaTipo(id.entrada));
                 }else if(getDominio(cmp.ts.buscaTipo(id.entrada))
                         .equals(factor_prima.tipo))
                     factor.tipo = getRango(cmp.ts.buscaTipo(id.entrada));
                 else {
                     factor.tipo = ERROR_TIPO;
-                    cmp.me.error( cmp.ERR_SEMANTICO, "{25} : ERROR de Tipos. \n"+ "Comparación " +
+                    if(factor_prima.tipo.equals(""))
+                        cmp.me.error(cmp.ERR_SEMANTICO, "{25}: No se ha declarado variable en linea " + (cmp.be.preAnalisis.numLinea-1));
+                    else
+                        cmp.me.error( cmp.ERR_SEMANTICO, "{25} : ERROR de Tipos. \n"+ "Comparación " +
                             getDominio(cmp.ts.buscaTipo(id.entrada)) + " con " + factor_prima.tipo);
                 }
             }
@@ -754,7 +763,11 @@ public class SintacticoSemantico {
                     proposiciones_optativas.tipo = VACIO;
                 }else{
                     proposiciones_optativas.tipo = ERROR_TIPO;
-                    cmp.me.error(cmp.ERR_SEMANTICO, "{42} : Error en las proposiciones");
+                    if(proposicion.tipo.equals("") || proposiciones_optativas2.tipo.equals(""))
+                        cmp.me.error(cmp.ERR_SEMANTICO, "{42} : Error en las proposiciones: No se ha declarado variable en linea " + (cmp.be.preAnalisis.numLinea-1));
+                    else
+                        cmp.me.error(cmp.ERR_SEMANTICO, "{42} : Error en las proposiciones: \n Comparando"
+                                    + proposicion.tipo + " con " + proposiciones_optativas2.tipo);
                 }
             }
         }else{ 
@@ -789,9 +802,12 @@ public class SintacticoSemantico {
                 if(cmp.ts.buscaTipo(id.entrada).equals(expresion.tipo)){
                     proposicion.tipo = VACIO;
                 }
-                else if( (cmp.ts.buscaTipo(id.entrada).equals("SINGLE") && expresion.tipo.equals("INTEGER")) ||
+                else if(!expresion.tipo.equals("")) 
+                    if((cmp.ts.buscaTipo(id.entrada).equals("SINGLE") && expresion.tipo.equals("INTEGER")) ||
+                        (cmp.ts.buscaTipo(id.entrada).equals("INTEGER") && expresion.tipo.equals("SINGLE")) ||
+                        (cmp.ts.buscaTipo(id.entrada).equals("INTEGER") && getRango(expresion.tipo).equals("SIBGLE")) ||
                         (cmp.ts.buscaTipo(id.entrada).equals("SINGLE") && getRango(expresion.tipo).equals("INTEGER"))){
-                    proposicion.tipo = VACIO;
+                        proposicion.tipo = VACIO;
                 }
                 else{
                     proposicion.tipo = ERROR_TIPO;
