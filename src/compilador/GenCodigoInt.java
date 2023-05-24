@@ -331,6 +331,7 @@ public class GenCodigoInt {
             emparejar("literal");
             //expresion → literal{16}
             
+            
         }else{
             error(String.format("syntax error in line %s: Expersión no válida",
                     cmp.be.preAnalisis.numLinea));
@@ -441,23 +442,7 @@ public class GenCodigoInt {
             emparejar("id");
             factor_prima(factor_prima);
             //Acción Semántica 25
-            if(analizarSemantica){
-                System.out.println("factor prima: " + factor_prima.tipo);
-                if(factor_prima.tipo.equals(VACIO)){
-                    factor.tipo = cmp.ts.buscaTipo(id.entrada);
-                    System.out.println("tipo: " + cmp.ts.buscaTipo(id.entrada));
-                }else if(getDominio(cmp.ts.buscaTipo(id.entrada))
-                        .equals(factor_prima.tipo))
-                    factor.tipo = getRango(cmp.ts.buscaTipo(id.entrada));
-                else {
-                    factor.tipo = ERROR_TIPO;
-                    if(factor_prima.tipo.equals(""))
-                        cmp.me.error(cmp.ERR_SEMANTICO, "{25}: No se ha declarado variable en linea " + (cmp.be.preAnalisis.numLinea-1));
-                    else
-                        cmp.me.error( cmp.ERR_SEMANTICO, "{25} : ERROR de Tipos. \n"+ "Comparación " +
-                            getDominio(cmp.ts.buscaTipo(id.entrada)) + " con " + factor_prima.tipo);
-                }
-            }
+          
         } else if (preAnalisis.equals("num")) {
             emparejar("num");
             //Acción Semántica 26
