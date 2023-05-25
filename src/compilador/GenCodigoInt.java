@@ -148,8 +148,6 @@ public class GenCodigoInt {
     }
 
 
-
-
     private void lista_declaraciones(Atributo lista_declaraciones) {
         //lista_declaraciones → id  as  tipo   lista_declaraciones’ {4}
         Linea_BE id = new Linea_BE();
@@ -345,14 +343,9 @@ public class GenCodigoInt {
         if (preAnalisis.equals("opsuma")) {
             emparejar("opsuma");
             termino(termino);
-           
             expresion_prima(expresion_prima2);
-           
-        }else{
-            if(analizarSemantica) {
-                //expresion’ → ϵ{19}
-                
-            }
+        }
+        else{
         }
     }
 
@@ -393,46 +386,14 @@ public class GenCodigoInt {
         if(preAnalisis.equals("opmult")){
             emparejar("opmult");
             factor(factor);
-            //Acción Semántica 22
-            if(analizarSemantica){
-                System.out.println("Factor.tipo = " + factor.tipo);
-                //System.out.println("getRango.tipo = " + getRango(factor.tipo));
-                if(termino_prima.h.equals(factor.tipo)){
-                    termino_prima2.h = factor.tipo;
-                }
-                else if(termino_prima.h.equals("SINGLE") && factor.tipo.equals("INTEGER") ||
-                          termino_prima.h.equals("INTEGER") && factor.tipo.equals("SINGLE")){
-                    termino_prima2.h = "SINGLE";
-                }
-                else if(termino_prima.h.equals(getRango(factor.tipo))) {
-                    termino_prima2.h = getRango(factor.tipo);
-                }
-                else {
-                    termino_prima2.h = ERROR_TIPO;
-                    cmp.me.error( cmp.ERR_SEMANTICO, "{22} : ERROR de Tipos" + "En linea: " + cmp.be.preAnalisis.numLinea);
-                }
-            }
             termino_prima(termino_prima2);
-            //Acción Semántica 23
-            if(analizarSemantica) {
-                if(!termino_prima2.h.equals(ERROR_TIPO) && !termino_prima2.tipo.equals(ERROR_TIPO) )
-                    termino_prima.tipo = termino_prima2.tipo;
-                else {
-                    termino_prima.tipo = ERROR_TIPO;
-                    cmp.me.error( cmp.ERR_SEMANTICO, "{23} : ERROR de Tipos" );
-                }
-            }
-        } else {
-            if(analizarSemantica){
-                //termino’ →  ϵ {24}
-                //Acción Semántica 24
-                termino_prima.tipo = termino_prima.h;
-            }
+        } 
+        else {
+            
         }
     }
 
     private void factor(Atributo factor) {
-        //factor → id  factor’{25} | num{26} | num.num{27}  |  ( expresion ){28}
         Linea_BE id = new Linea_BE();
         Atributo factor_prima = new Atributo();
         Atributo expresion = new Atributo();
@@ -441,19 +402,10 @@ public class GenCodigoInt {
             id = cmp.be.preAnalisis;
             emparejar("id");
             factor_prima(factor_prima);
-            //Acción Semántica 25
-          
-        } else if (preAnalisis.equals("num")) {
+        }else if (preAnalisis.equals("num")){
             emparejar("num");
-            //Acción Semántica 26
-            if(analizarSemantica){
-                factor.tipo = "INTEGER";
-            }
-        } else if (preAnalisis.equals("num.num")) {
+        }else if (preAnalisis.equals("num.num")){
             emparejar("num.num");
-            //Acción Semántica 27
-            if ( analizarSemantica )
-                factor.tipo = "SINGLE";
         } else if (preAnalisis.equals("(")) {
             emparejar("(");
             expresion(expresion);

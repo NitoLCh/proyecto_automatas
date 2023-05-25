@@ -32,6 +32,7 @@ import general.ICompilador;
 import general.IUListener;
 import general.Linea_BE;
 import general.Linea_TS;
+import java.util.ArrayList;
 
 public class Compilador implements ICompilador {
 
@@ -43,6 +44,7 @@ public class Compilador implements ICompilador {
 	ManejErrores        me     = new ManejErrores        ( this );
 	GenCodigoInt        gci    = new GenCodigoInt        ( this );
         GenCodigoObj        gco    = new GenCodigoObj        ( this );
+        Cuadruplos          cua    = new Cuadruplos          ( this );
         
 	IUListener iuListener = null;
 
@@ -94,6 +96,7 @@ public class Compilador implements ICompilador {
 	public void generarCodigoInt(){
           me.inicializar ();
           be.restablecer ();             // Colocar el preAnalisis al inicio del buffer
+          cua.inicializar();             //
           gci.generar    ();             // Arrancar la generacion de codigo intermedio
 	}
     
@@ -127,6 +130,21 @@ public class Compilador implements ICompilador {
 	}
     
 	//--------------------------------------------------------------------------
+        
+        public String[][] getTablaCuadruplos(){
+            ArrayList<Cuadruplo> cuadruplos = cua.getCuadruplos();
+            String [][] arrCuadruplos = new String[cua.getTamano()][4];
+            
+            for(int i=0; i<cua.getTamano(); i++){
+                arrCuadruplos[i][0] = cuadruplos.get(i).op;
+                arrCuadruplos[i][1] = cuadruplos.get(i).arg1;
+                arrCuadruplos[i][2] = cuadruplos.get(i).arg2;
+                arrCuadruplos[i][3] = cuadruplos.get(i).resultado;
+            }
+            return arrCuadruplos;
+        }
+        
+        //--------------------------------------------------------------------------
     
 	public  String [][] getTablaSimbolos(){
         
