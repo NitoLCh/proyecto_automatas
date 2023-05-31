@@ -131,6 +131,7 @@ public class GenCodigoInt {
         return Arrays.asList(terminales).contains(preAnalisis);
     }
      
+<<<<<<< HEAD
     private static int prioridades(char operador) {
         switch (operador) {
             case '+':
@@ -141,6 +142,56 @@ public class GenCodigoInt {
                 return 2;
             default:
                 return 0;
+=======
+     public String getDominio (String tipo) {
+        String [] partes = tipo.split("->");
+        return partes[0];
+    }
+    
+    public String getRango (String tipo) {
+        String [] partes = tipo.split("->");
+        if(partes.length > 1)
+            return partes[1];
+        return partes[0];
+    }
+
+
+    private void lista_declaraciones(Atributo lista_declaraciones) {
+        //lista_declaraciones → id  as  tipo   lista_declaraciones’ {4}
+        Linea_BE id = new Linea_BE();
+        Atributo lista_declaraciones_prima = new Atributo();
+        Atributo tipo = new Atributo();
+        
+        if(preAnalisis.equals("id")) {
+            id = cmp.be.preAnalisis;
+            emparejar("id");
+            emparejar("as");
+            tipo(tipo);
+            lista_declaraciones_prima(lista_declaraciones_prima);
+            //Acción Semántica 4
+            if(analizarSemantica){
+                if(cmp.ts.buscaTipo(id.entrada).equals("")){
+                    cmp.ts.anadeTipo(id.entrada, tipo.tipo);
+                    if(lista_declaraciones_prima.tipo.equals(VACIO)){
+                        lista_declaraciones.tipo = tipo.tipo;
+                    } 
+                    else if(!lista_declaraciones.tipo.equals(ERROR_TIPO)){
+                        lista_declaraciones.tipo = tipo.tipo + "x" + lista_declaraciones_prima.tipo;
+                    }else{
+                        lista_declaraciones.tipo = ERROR_TIPO;
+                        cmp.me.error(Compilador.ERR_SEMANTICO, "{4} : lista_declaraciones = ERROR_TIPO");
+                    }
+                } 
+                else {
+                    lista_declaraciones.tipo = ERROR_TIPO;
+                    cmp.me.error(Compilador.ERR_SEMANTICO, "{4} : Identificador ya declarado");
+                }
+            }
+        } 
+        else{
+            error(String.format("syntax error in line %s: Mala declaracion de variables",
+                                cmp.be.preAnalisis.numLinea));
+>>>>>>> 40117f80d90cdafc7d5e316c08158dea48bb73b6
         }
     }
     
@@ -168,15 +219,328 @@ public class GenCodigoInt {
             else
                 prefijo.add(token);
         }
+<<<<<<< HEAD
+=======
+    }
+
+    private void expresion(Atributo expresion){
+        //expresion → termino{14}  expresion’{15} |  
+        Atributo termino = new Atributo();
+        Atributo expresion_prima = new Atributo();
+        String terminales[] = {"id", "num", "num.num", "("};
+        if(estaEn(terminales)){
+            termino(termino);
+           
+            expresion_prima(expresion_prima);
+           
+            
+        }else if(preAnalisis.equals("literal")){
+            emparejar("literal");
+            //expresion → literal{16}
+            
+            
+        }else{
+            error(String.format("syntax error in line %s: Expersión no válida",
+                    cmp.be.preAnalisis.numLinea));
+        }
+    }
+
+    private void expresion_prima(Atributo expresion_prima) {
+        //expresion’ → opsuma termino{17} expresion’{18}
+        Atributo termino = new Atributo();
+        Atributo expresion_prima2  = new Atributo();
+        if (preAnalisis.equals("opsuma")) {
+            emparejar("opsuma");
+            termino(termino);
+            expresion_prima(expresion_prima2);
+        }
+        else{
+        }
+    }
+
+    private void termino(Atributo termino) {
+        //termino → factor{20} termino’ {21}
+        Atributo factor = new Atributo();
+        Atributo termino_prima = new Atributo();
+>>>>>>> 40117f80d90cdafc7d5e316c08158dea48bb73b6
         
         while (!pila.isEmpty()) {
             prefijo.add(pila.pop());
         }
         
+<<<<<<< HEAD
         ArrayList <String> prefijoNuevo = new ArrayList <> ();
         for ( int i = prefijo.size()-1; i >= 0; i-- )
             prefijoNuevo.add( prefijo.get(i) );
         return prefijoNuevo;
+=======
+        if(preAnalisis.equals("opmult")){
+            emparejar("opmult");
+            factor(factor);
+            termino_prima(termino_prima2);
+        } 
+        else {
+            
+        }
+    }
+
+    private void factor(Atributo factor) {
+        Linea_BE id = new Linea_BE();
+        Atributo factor_prima = new Atributo();
+        Atributo expresion = new Atributo();
+        
+        if(preAnalisis.equals("id")){
+            id = cmp.be.preAnalisis;
+            emparejar("id");
+            factor_prima(factor_prima);
+        }else if (preAnalisis.equals("num")){
+            emparejar("num");
+        }else if (preAnalisis.equals("num.num")){
+            emparejar("num.num");
+        } else if (preAnalisis.equals("(")) {
+            emparejar("(");
+            expresion(expresion);
+            emparejar(")");
+            //Acción Semántica 28
+            if(analizarSemantica)
+                factor.tipo = expresion.tipo;
+        } else {
+            error(String.format("syntax error in line %s: Expresión inválida",
+                    cmp.be.preAnalisis.numLinea));
+        }
+    }
+
+    private void factor_prima(Atributo factor_prima) {
+        //factor’ → ( lista_expresiones ){29}
+        Atributo lista_expresiones = new Atributo();
+        if(preAnalisis.equals("(")){
+            emparejar("(");
+            lista_expresiones(lista_expresiones);
+            emparejar(")");
+            //Acción Semántica 29
+            if(analizarSemantica){
+                factor_prima.tipo = lista_expresiones.tipo;
+            }
+        }else{ 
+            if(analizarSemantica)
+                //factor’ → ϵ{30}
+                //Acción Semántica 30
+                factor_prima.tipo = VACIO;
+        }
+    }
+
+    private void tipo(Atributo tipo) {
+        //tipo → integer{31}  | single{32}  | string{33}
+        if(preAnalisis.equals("integer")) {
+            emparejar("integer");
+            //Acción Semántica 31
+            if(analizarSemantica)
+                tipo.tipo = "INTEGER";
+        }else if(preAnalisis.equals("single")) {
+            emparejar("single");
+            //Acción Semántica 32
+            if(analizarSemantica)
+                tipo.tipo = "SINGLE";
+        }else if (preAnalisis.equals("string")) {
+            emparejar("string");
+            //Acción Semántica 33
+            if(analizarSemantica)
+                tipo.tipo = "STRING";
+        }else {
+            error(String.format("syntax error in line %s: Tipo de dato inválido",
+                    cmp.be.preAnalisis.numLinea));
+        }
+    }
+
+
+    private void proposiciones_optativas(Atributo proposiciones_optativas) {
+        //proposiciones_optativas → proposicion  proposiciones_optativas {42}  
+        Atributo proposicion = new Atributo();
+        Atributo proposiciones_optativas2 = new Atributo();
+        
+        String terminales[] = {"id", "call", "if", "do"};
+        if (estaEn(terminales)) {
+            proposicion(proposicion);
+            proposiciones_optativas(proposiciones_optativas2);
+            //Acción Semántica 42
+            if(analizarSemantica){
+                if(proposicion.tipo.equals(VACIO) && 
+                     proposiciones_optativas2.tipo.equals(VACIO)){
+                    proposiciones_optativas.tipo = VACIO;
+                }else{
+                    proposiciones_optativas.tipo = ERROR_TIPO;
+                    if(proposicion.tipo.equals("") || proposiciones_optativas2.tipo.equals(""))
+                        cmp.me.error(cmp.ERR_SEMANTICO, "{42} : Error en las proposiciones: No se ha declarado variable en linea " + (cmp.be.preAnalisis.numLinea-1));
+                    else
+                        cmp.me.error(cmp.ERR_SEMANTICO, "{42} : Error en las proposiciones: \n Comparando"
+                                    + proposicion.tipo + " con " + proposiciones_optativas2.tipo);
+                }
+            }
+        }else{ 
+            if(analizarSemantica)
+            //proposiciones_optativas → ϵ{43}
+            //Acción Semántica 43
+            proposiciones_optativas.tipo = VACIO;
+        }
+    }
+
+    private void proposicion(Atributo proposicion) {
+          //proposicion → id  opasig expresion {44} |  call  id  proposicion’{45}  |
+  //        if condicion then proposiciones_optativas else proposiciones_optativas {46} end if | 
+  //        do while condicion  proposiciones_optativas {47} loop 
+        
+        Linea_BE id = new Linea_BE();
+        Atributo expresion = new Atributo();
+        Atributo proposicion_prima = new Atributo();
+        Atributo condicion = new Atributo();
+        Atributo proposiciones_optativas2 = new Atributo();
+        Atributo proposiciones_optativas3 = new Atributo();
+        Atributo condicion2 = new Atributo();
+        Atributo proposiciones_optativas4 = new Atributo();
+        
+        if (preAnalisis.equals("id")) {
+            id = cmp.be.preAnalisis;
+            emparejar("id");
+            emparejar("opasig");
+            expresion(expresion);
+            // ----------------------Accion Semantica 1----------------
+            emite(id + ":=" + expresion.Lugar );
+            //---------------------------Fin---------------------------
+        }else if (preAnalisis.equals("call")) {
+            emparejar("call");
+            id = cmp.be.preAnalisis;
+            emparejar("id");
+            proposicion_prima(proposicion_prima);
+            //Acción Semántica 45
+           
+        } else if (preAnalisis.equals("if")) {
+            emparejar("if");
+            // ----------------------Accion Semantica 2----------------
+            proposicion.siguiente = tempnuevo();
+            condicion.verdadera = tempnuevo();
+            condicion.falsa = tempnuevo();
+            proposiciones_optativas2.siguiente = proposicion.siguiente;
+            // ----------------------Fin----------------
+            //
+            condicion(condicion);
+            emparejar("then");
+            proposiciones_optativas(proposiciones_optativas2);
+            
+             // ----------------------Accion Semantica 3----------------
+             emite ( proposicion.falsa + ":" );
+             // ---------------------Fin----------------
+            emparejar("else");
+            proposiciones_optativas(proposiciones_optativas3);
+            // ----------------------Accion Semantica 4----------------
+            emite ( proposicion.siguiente + ":" );
+            // ----------------------fin----------------
+            //Acción Semántica 46
+            
+            emparejar("end");
+            emparejar("if");
+        }
+        else if (preAnalisis.equals("do")) {
+            emparejar("do");
+            emparejar("while");
+              // ----------------------Accion Semantica 5----------------
+                proposicion.comienzo = tempnuevo();
+                proposicion.siguiente = tempnuevo(); 
+                condicion.verdadera = tempnuevo();
+                condicion.falsa = proposicion.siguiente;
+                // *NO SUPE QUE ONDA CON ESTO * proposiciones_optativas3.siguiente = proposicion.comienzo  emite(proposicion.comienzo + ":" );
+               // ----------------------Fin----------------
+            condicion(condicion2);
+            proposiciones_optativas(proposiciones_optativas4);
+            //----------------------Accion Semantica 6----------------
+              emite ( "goto" + proposicion.comienzo );
+              emite ( condicion.falsa + ":" );
+
+            emparejar("loop");
+        } else{
+            error(String.format("syntax error in line %s: Expresión inválida",
+                    cmp.be.preAnalisis.numLinea));
+        }
+    }
+
+    private void propsicion_prima(Atributo proposicion_prima) {
+        //proposicion’ → ( lista_expresiones ) {48} 
+        Atributo lista_expresiones = new Atributo();
+        if(preAnalisis.equals("(")) {
+            emparejar("(");
+            lista_expresiones(lista_expresiones);
+            emparejar(")");
+            //Acción Semántica 48
+            if(analizarSemantica)
+                proposicion_prima.tipo = lista_expresiones.tipo;
+        }else if(analizarSemantica)
+            //proposicion’ →  ϵ {49}
+            //Acción Semántica 49
+            proposicion_prima.tipo = "VOID";
+        //empty
+    }
+
+//------------------------------------------------------------------------------
+//::
+    
+    
+    
+    
+    
+    
+    
+
+
+  
+	// Funcion que convierte de infijo a Prefijo
+
+    public static String infijoAPrefijo(String infijo) {
+        // invierte la expresion de infijo
+        String invertido = new StringBuilder(infijo).reverse().toString();
+        
+        // creamos una pila de operadores
+        Stack<String> operador = new Stack<>();
+        String[] c3d = invertido.split("\\s+"); //la expresion en prefija la corta y las metes en arreglos "\\s+"
+        //String[] c3d = invertido.split("([A-Za-z1-9]\\w*)|([\\+\\-\\\\\\*\\)\\(])"); //la expresion en prefija la corta y las metes en arreglos "\\s+"
+        
+         
+        
+        // creamos un string builder para guardar la expresion prefijo
+        StringBuilder prefijo = new StringBuilder();
+
+        // iteramos atraves de la expresion infija invertida
+      
+
+        for (int i = 0; i < c3d.length; i++) {
+            String ch = c3d[i];
+
+            if (ch.equals(" ")) {
+                continue; // Ignora los espacios
+            }
+
+            if (ch.matches("([A-Za-z0-9])\\w*")) {
+                prefijo.append(ch).append(" "); // agrega el operando y el espacio
+            } else if (ch.matches("\\)")) {
+                operador.push(ch);
+            } else if (ch.matches("\\(")) {
+                while (!operador.isEmpty() && !operador.peek().matches("\\)")) {
+                    prefijo.append(operador.pop()).append(" "); // agrega el operando y el espacio
+                }
+                operador.pop(); // sacamos el parentesis de cierre
+            } else {
+                while (!operador.isEmpty() && precedencia(operador.peek()) > precedencia(ch)) {
+                    prefijo.append(operador.pop()).append(" "); // agregamos al operador y el espacio
+                }
+                operador.push(ch);
+            }
+        }
+
+        while (!operador.isEmpty()) {
+            prefijo.append(operador.pop()).append(" "); // agregamos el operador y el espacio
+        }
+
+        //  invierte el prefijo y lo regrese
+        return prefijo.reverse().toString().trim();
+>>>>>>> 40117f80d90cdafc7d5e316c08158dea48bb73b6
     }
 
     public static int precedencia(String operador) {
