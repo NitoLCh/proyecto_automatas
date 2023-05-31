@@ -26,6 +26,7 @@
 package compilador;
 
 import general.Linea_BE;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
@@ -58,7 +59,7 @@ public class GenCodigoInt {
     
     public void generar () {
         consecutivoTemp = 1;
-        InfijoC3D("( ( xxxx / ( 7 - ( yyy + 1 ) ) ) * 3 ) - ( zz + ( 1 + x ) ) ");
+        preAnalisis = cmp.be.preAnalisis.complex;
         programa();
     }    
 
@@ -70,8 +71,10 @@ public class GenCodigoInt {
     //--------------------------------------------------------------------------
     //************EMPAREJAR**************//
     private void emparejar ( String t ) {
-	if (cmp.be.preAnalisis.complex.equals ( t ) )
-		cmp.be.siguiente ();
+	if (cmp.be.preAnalisis.complex.equals(t)){
+            cmp.be.siguiente ();
+            preAnalisis = cmp.be.preAnalisis.complex;
+        }
 	else
 		errorEmparejar ( "Se esperaba " + t + " se encontró " +
                                  cmp.be.preAnalisis.lexema );
@@ -128,58 +131,52 @@ public class GenCodigoInt {
         return Arrays.asList(terminales).contains(preAnalisis);
     }
      
-     public String getDominio (String tipo) {
-        String [] partes = tipo.split("->");
-        return partes[0];
+    private static int prioridades(char operador) {
+        switch (operador) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            default:
+                return 0;
+        }
     }
     
-    public String getRango (String tipo) {
-        String [] partes = tipo.split("->");
-        if(partes.length > 1)
-            return partes[1];
-        return partes[0];
-    }
-    
-    public static String infijoAPrefijo(String infijo) {
-        // invierte la expresion de infijo
-        String invertido = new StringBuilder(infijo).reverse().toString();
+    public static ArrayList<String> infijoAPrefijo(String infijo) {
+        String[] tokens = infijo.split(" ");
         
-        // creamos una pila de operadores
-        Stack<String> operador = new Stack<>();
-        String[] c3d = invertido.split("\\s+"); //la expresion en prefija la corta y las metes en arreglos "\\s+"
-        // creamos un string builder para guardar la expresion prefijo
-        StringBuilder prefijo = new StringBuilder();
-        // iteramos atraves de la expresion infija invertida
-        for (int i = 0; i < c3d.length; i++) {
-            String ch = c3d[i];
-
-            if (ch.equals(" ")) {
-                continue; // Ignora los espacios
-            }
-
-            if (ch.matches("([A-Za-z0-9])\\w*")) {
-                prefijo.append(ch).append(" "); // agrega el operando y el espacio
-            } else if (ch.matches("\\)")) {
-                operador.push(ch);
-            } else if (ch.matches("\\(")) {
-                while (!operador.isEmpty() && !operador.peek().matches("\\)")) {
-                    prefijo.append(operador.pop()).append(" "); // agrega el operando y el espacio
-                }
-                operador.pop(); // sacamos el parentesis de cierre
-            } else {
-                while (!operador.isEmpty() && precedencia(operador.peek()) > precedencia(ch)) {
-                    prefijo.append(operador.pop()).append(" "); // agregamos al operador y el espacio
-                }
-                operador.push(ch);
-            }
+        Stack<String> pila = new Stack<>();
+        
+        ArrayList<String> prefijo = new ArrayList<>();
+        
+        for (int i = tokens.length - 1; i >= 0; i--) {
+            String token = tokens[i];
+            if (esOperador(token.charAt(0))) {
+                while ( !pila.isEmpty() && (prioridades(pila.peek().charAt(0)) > prioridades(token.charAt(0))) )
+                    prefijo.add( pila.pop() );
+                pila.push(token);
+            } 
+            else if (token.equals(")"))
+                pila.push(token);
+            else if (token.equals("(")){
+                while (!pila.isEmpty() && !pila.peek().equals(")"))
+                    prefijo.add(pila.pop());
+                pila.pop(); 
+            } 
+            else
+                prefijo.add(token);
         }
-
-        while (!operador.isEmpty()) {
-            prefijo.append(operador.pop()).append(" "); // agregamos el operador y el espacio
+        
+        while (!pila.isEmpty()) {
+            prefijo.add(pila.pop());
         }
-
-        //  invierte el prefijo y lo regrese
-        return prefijo.reverse().toString().trim();
+        
+        ArrayList <String> prefijoNuevo = new ArrayList <> ();
+        for ( int i = prefijo.size()-1; i >= 0; i-- )
+            prefijoNuevo.add( prefijo.get(i) );
+        return prefijoNuevo;
     }
 
     public static int precedencia(String operador) {
@@ -195,51 +192,59 @@ public class GenCodigoInt {
         }
     }
 
-    public static boolean esOperador(String operador) {
+    public static boolean esOperador(char operador) {
         switch (operador) {
-            case "+":
-            case "-":
-            case "*":
-            case "/":
+            case '+':
+            case '-':
+            case '*':
+            case '/':
                 return true;
             default:
                 return false;
         }
     }
-
-     public String InfijoC3D(String infijo){
+    
+    private ArrayList <String> nuevoArreglo ( ArrayList <String> entrada, int posicion, String temporal ) {
+        ArrayList <String> salida = new ArrayList<String>();
         
-         String prefijo = infijoAPrefijo(infijo);//manda a llamar el metodo de infijo a prefijo y lo guarda en una variable
-         emite(infijo); // emite la cadena de ejemplo a convertir
-        String[] c3d = prefijo.split("\\s+"); //la expresion en prefija la corta y las metes en arreglos
-         for(int i=0; c3d[i].equals(("t"+consecutivoTemp)) || i < c3d.length-1  ;i++)
-         {
-
-             if(c3d[i].matches("([\\+\\-\\*\\/\\^])\\w*") && c3d[i+1].matches("([A-Za-z0-9])\\w*")&& c3d[i+2].matches("([A-Za-z0-9])\\w*") )
-             {
-                
-                 emite(tempnuevo() + " := " + c3d[i+1] + c3d[i] +  c3d[i+2]);//impirme el c3d 
-                  c3d[i]="t"+(consecutivoTemp-1);            
-                 for (int j = i+1; j < c3d.length-2; j++) {
-                    
-                         c3d[j]=c3d[j+2];  //recorre el arreglo            
-                     }
-                        
-           
-                  i=0;
+        for ( int i = 0; i < entrada.size(); i++ ) {
+            if ( i != posicion && i != ( posicion + 1 ) && i != ( posicion + 2 ) ) {
+                salida.add( entrada.get( i ) );
+            } else if ( i == posicion ) {
+                salida.add( temporal );
             }
+        }
+        
+        return salida;
+    }
+    
+     public String InfijoC3D(ArrayList <String> expresionArray){
+        int i = 0;
+        String ultimoTemporal = "";
+        
+        while ( expresionArray.size() >= 3 ){
+            String c = expresionArray.get( i );
             
-         }
-         
-        emite(tempnuevo() + " := " + c3d[1] + c3d[0] +  c3d[2]);  // imprime el ultimo c3d 
-      
-  
-         return "t" + consecutivoTemp + "";//regresa la variable temporal ultima que se utilizo
+            if ( this.esOperador(c.charAt( 0 )) && 
+                Character.isLetterOrDigit( expresionArray.get( i + 1 ).charAt( 0 ))  &&
+                Character.isLetterOrDigit( expresionArray.get( i + 2 ).charAt( 0 )) ){
+                String actT = tempnuevo();
+                
+                emite ( actT + ":=" + expresionArray.get( i + 1 ) + c + expresionArray.get( i + 2 ) );
+                
+                expresionArray = nuevoArreglo( expresionArray, i, actT );
+                
+                i=0;
+                ultimoTemporal = actT;
+            } else 
+                i++;
+        }
+        
+        return ultimoTemporal;
      }
     
 	//------------------------------------------------------------------------
     private void programa () {
-        
         Atributo declaraciones = new Atributo();
         Atributo declaraciones_subprogramas = new Atributo();
         Atributo proposiciones_optativas = new Atributo();
@@ -453,6 +458,8 @@ public class GenCodigoInt {
     private void factor(Atributo factor) {
         //factor → id  factor’{25} | num{26} | num.num{27}  |  ( expresion ){28}
         Linea_BE id = new Linea_BE();
+        Linea_BE num = new Linea_BE();
+        Linea_BE numnum = new Linea_BE();
         Atributo factor_prima = new Atributo();
         Atributo expresion = new Atributo();
         
@@ -464,14 +471,16 @@ public class GenCodigoInt {
             
             factor_prima(factor_prima);
         } else if (preAnalisis.equals("num")) {
+            num = cmp.be.preAnalisis;
             emparejar("num");
             //Acción Semántica 17
-            factor.valor = id.lexema + " ";
+            factor.valor = num.lexema + " ";
             
         } else if (preAnalisis.equals("num.num")) {
+            numnum = cmp.be.preAnalisis;
             emparejar("num.num");
             //Acción Semántica 18
-            factor.valor = id.lexema + " ";
+            factor.valor = numnum.lexema + " ";
             
         } else if (preAnalisis.equals("(")) {
             emparejar("(");
@@ -479,7 +488,6 @@ public class GenCodigoInt {
             emparejar(")");
             //Acción Semántica 19
             factor.valor = "( " + expresion.valor + ") ";
-            
         } else {
             error(String.format("syntax error in line %s: Expresión inválida",
                     cmp.be.preAnalisis.numLinea));
