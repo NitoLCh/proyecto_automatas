@@ -1,6 +1,7 @@
 package compilador;
 public class Atributo {
-    public String Lugar;
+    public String valor;
+    public String lugar;
     public String op;
     public String siguiente;
     public String verdadera;
@@ -10,11 +11,13 @@ public class Atributo {
     String tipo = "";
     String h = "";
      public Atributo () {
-        Lugar = "";
+        valor = "";
+        lugar = "";
         op = "";
         siguiente = "";
         verdadera = "";
         falsa = "";
         comienzo = "";
+        
     }
 }

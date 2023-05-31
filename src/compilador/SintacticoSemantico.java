@@ -882,18 +882,14 @@ public class SintacticoSemantico {
     }
 
     private void propsicion_prima(Atributo proposicion_prima) {
-        //proposicion’ → ( lista_expresiones ) {48} 
         Atributo lista_expresiones = new Atributo();
         if(preAnalisis.equals("(")) {
             emparejar("(");
             lista_expresiones(lista_expresiones);
             emparejar(")");
-            //Acción Semántica 48
             if(analizarSemantica)
                 proposicion_prima.tipo = lista_expresiones.tipo;
         }else if(analizarSemantica)
-            //proposicion’ →  ϵ {49}
-            //Acción Semántica 49
             proposicion_prima.tipo = "VOID";
         //empty
     }
