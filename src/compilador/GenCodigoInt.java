@@ -216,6 +216,7 @@ public class GenCodigoInt {
                 String actT = tempnuevo();
                 
                 emite ( actT + ":=" + expresion.get( i + 1 ) + c + expresion.get( i + 2 ) );
+                cmp.cua.agregar ( new Cuadruplo ( c, expresion.get( i + 1 ), expresion.get( i + 2 ), actT ) );
                 
                 expresion = nuevoArreglo( expresion, i, actT );
                 i=0;
@@ -362,14 +363,18 @@ public class GenCodigoInt {
             oprel = cmp.be.preAnalisis;
             emparejar("oprel");
             expresion(expresion3);
-            //Acción Semántica 8
+            //Acción Semántica 1
             String tempExpr1 = this.InfijoC3D(infijoAPrefijo(expresion2.valor));
             String tempExpr2 = this.InfijoC3D(infijoAPrefijo(expresion3.valor));
 
             emite("if " + (!tempExpr1.equals("") ? tempExpr1 + " " : expresion2.valor) + oprel.lexema + " "
                     + (!tempExpr2.equals("") ? tempExpr2 + " " : expresion2.valor) + "goto " + condicion.verdadera);
+            cmp.cua.agregar ( new Cuadruplo ( oprel.lexema, ( !tempExpr1.equals ("" ) ? tempExpr1 + " " : expresion2.valor ),
+                            ( !tempExpr2.equals ( "" ) ? tempExpr2 + " " : expresion3.valor ), condicion.verdadera ) );
             emite("goto " + condicion.falsa);
+            cmp.cua.agregar ( new Cuadruplo ( "goto", "", "", condicion.falsa ) );
             emite(condicion.verdadera + ":");
+            cmp.cua.agregar ( new Cuadruplo ( "", "", "", condicion.verdadera ) );
 
         } else {
             error(String.format("syntax error in line %s: Condición no válida",
@@ -387,14 +392,14 @@ public class GenCodigoInt {
         if (estaEn(terminales)) {
             termino(termino);
             expresion_prima(expresion_prima);
-            //Acción Semántica 9
+            //Acción Semántica 2
             expresion.valor = termino.valor + expresion_prima.valor;
 
         } else if (preAnalisis.equals("literal")) {
             literal = cmp.be.preAnalisis;
             emparejar("literal");
 
-            //Acción Semántica 10
+            //Acción Semántica 3
             expresion.valor = literal.lexema;
         } else {
             error(String.format("syntax error in line %s: Expersión no válida",
@@ -411,10 +416,10 @@ public class GenCodigoInt {
             termino(termino);
             expresion_prima(expresion_prima2);
 
-            //Acción Semántica 11
+            //Acción Semántica 4
             expresion_prima.valor = "+ " + termino.valor + expresion_prima2.valor;
         } else {
-            //Acción Semántica 12
+            //Acción Semántica 5
             expresion_prima.valor = "";
         }
     }
@@ -429,7 +434,7 @@ public class GenCodigoInt {
             factor(factor);
             termino_prima(termino_prima);
 
-            //Acción Semántica 13
+            //Acción Semántica 6
             termino.valor = factor.valor + termino_prima.valor;
         } else {
             error(String.format("syntax error in line %s: Expresión inválida",
@@ -447,10 +452,10 @@ public class GenCodigoInt {
             factor(factor);
             termino_prima(termino_prima2);
 
-            //Acción Semántica 14
+            //Acción Semántica 7
             termino_prima.valor = "* " + factor.valor + termino_prima2.valor;
         } else {
-            //Acción Semántica 15
+            //Acción Semántica 8
             termino_prima.valor = "";
         }
     }
@@ -466,27 +471,27 @@ public class GenCodigoInt {
             case "id":
                 id = cmp.be.preAnalisis;
                 emparejar("id");
-                //Acción Semántica 16
+                //Acción Semántica 9
                 factor.valor = id.lexema + " ";
                 factor_prima(factor_prima);
                 break;
             case "num":
                 num = cmp.be.preAnalisis;
                 emparejar("num");
-                //Acción Semántica 17
+                //Acción Semántica 10
                 factor.valor = num.lexema + " ";
                 break;
             case "num.num":
                 numnum = cmp.be.preAnalisis;
                 emparejar("num.num");
-                //Acción Semántica 18
+                //Acción Semántica 11
                 factor.valor = numnum.lexema + " ";
                 break;
             case "(":
                 emparejar("(");
                 expresion(expresion);
                 emparejar(")");
-                //Acción Semántica 19
+                //Acción Semántica 12
                 factor.valor = "( " + expresion.valor + ") ";
                 break;
             default:
@@ -611,9 +616,10 @@ public class GenCodigoInt {
             proposicion(proposicion);
             proposiciones_optativas(proposiciones_optativas2);
 
-            //Acción Semántica 1
+            //Acción Semántica 13
             if (!proposiciones_optativas.siguiente.equals("")) {
                 emite("goto " + proposiciones_optativas.siguiente);
+                cmp.cua.agregar ( new Cuadruplo ( "goto", "", "", proposiciones_optativas.siguiente ) );
             }
         } else {
         }
@@ -634,7 +640,7 @@ public class GenCodigoInt {
             emparejar("id");
             emparejar("opasig");
             expresion(expresion);
-            //Acción Semántica 2
+            //Acción Semántica 14
             String temporal;
             try {
                 temporal = this.InfijoC3D(infijoAPrefijo(expresion.valor));
@@ -644,9 +650,11 @@ public class GenCodigoInt {
 
             if (!temporal.equals("")) {
                 emite(id.lexema + " := " + temporal);
+                cmp.cua.agregar ( new Cuadruplo ( ":=", temporal, "", id.lexema ) );
             } 
             else {
                 emite(id.lexema + " := " + expresion.valor);
+                cmp.cua.agregar ( new Cuadruplo ( ":=", expresion.valor.replace(" ", ""), "", id.lexema ) );
             }
         } 
         else if (preAnalisis.equals("call")) {
@@ -657,7 +665,7 @@ public class GenCodigoInt {
         } 
         else if (preAnalisis.equals("if")) {
             emparejar("if");
-            //Acción Semántica 3
+            //Acción Semántica 15
             proposicion.siguiente = etiqnueva();
             condicion.verdadera = etiqnueva();
             condicion.falsa = etiqnueva();
@@ -666,14 +674,16 @@ public class GenCodigoInt {
             condicion(condicion);
             emparejar("then");
             proposiciones_optativas(proposiciones_optativas2);
-            //Acción Semántica 4
+            //Acción Semántica 16
             emite(condicion.falsa + ":");
+            cmp.cua.agregar ( new Cuadruplo ( "", "", "", condicion.falsa ) );
 
             emparejar("else");
             proposiciones_optativas(proposiciones_optativas3);
 
-            //Acción Semántica 5
+            //Acción Semántica 17
             emite(proposicion.siguiente + ":");
+            cmp.cua.agregar ( new Cuadruplo ( "", "", "", condicion.siguiente ) );
             
             emparejar("end");
             emparejar("if");
@@ -681,7 +691,7 @@ public class GenCodigoInt {
             emparejar("do");
             emparejar("while");
 
-            //Acción Semántica 6
+            //Acción Semántica 18
             proposicion.comienzo = etiqnueva();
             proposicion.siguiente = etiqnueva();
             condicion2.verdadera = etiqnueva();
@@ -691,9 +701,11 @@ public class GenCodigoInt {
 
             condicion(condicion2);
             proposiciones_optativas(proposiciones_optativas4);
-            //Acción Semántica 7
+            //Acción Semántica 19
             emite("goto " + proposicion.comienzo);
+            cmp.cua.agregar ( new Cuadruplo ( "", "", "", proposicion.comienzo ) );
             emite(condicion2.falsa + ":");
+            cmp.cua.agregar ( new Cuadruplo ( "goto", "", "", proposicion.comienzo ) );
 
             emparejar("loop");
         } else {
