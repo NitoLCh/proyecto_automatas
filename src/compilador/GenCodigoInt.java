@@ -213,14 +213,14 @@ public class GenCodigoInt {
             if ( GenCodigoInt.esOperador(c.charAt(0 )) && 
                 Character.isLetterOrDigit( expresion.get( i + 1 ).charAt( 0 ))  &&
                 Character.isLetterOrDigit( expresion.get( i + 2 ).charAt( 0 )) ){
-                String actT = tempnuevo();
+                String temporalActual = tempnuevo();
                 
-                emite ( actT + ":=" + expresion.get( i + 1 ) + c + expresion.get( i + 2 ) );
-                cmp.cua.agregar ( new Cuadruplo ( c, expresion.get( i + 1 ), expresion.get( i + 2 ), actT ) );
+                emite ( temporalActual + ":=" + expresion.get( i + 1 ) + c + expresion.get( i + 2 ) );
+                cmp.cua.agregar ( new Cuadruplo ( c, expresion.get( i + 1 ), expresion.get( i + 2 ), temporalActual ) );
                 
-                expresion = nuevoArreglo( expresion, i, actT );
+                expresion = nuevoArreglo( expresion, i, temporalActual );
                 i=0;
-                ultimoTemporal = actT;
+                ultimoTemporal = temporalActual;
             } else 
                 // Si no cumple pasa el siguiente caracter
                 i++;

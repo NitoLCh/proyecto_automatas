@@ -91,7 +91,17 @@ public class GenCodigoObj {
                 cmp.iuListener.mostrarCodObj ( "  " + variable + " DWORD 0" );
                 variables.add(variable);
             }
+            
         }
+        ArrayList<Cuadruplo> cuadruplos = cmp.cua.getCuadruplos();
+        
+        for( Cuadruplo cuad : cuadruplos ){
+            if(!variables.contains( cuad.resultado ) ){
+                variables.add( cuad.resultado );
+                cmp.iuListener.mostrarCodObj ( "  " + cuad.resultado + " DWORD 0" );
+            }
+        }
+        
         cmp.iuListener.mostrarCodObj ( "" );
     }
     
@@ -122,10 +132,11 @@ public class GenCodigoObj {
     
     private void algoritmoGCO () {
         ArrayList<Cuadruplo> cuadruplos = cmp.cua.getCuadruplos();
+        
         for(Cuadruplo cuad : cuadruplos){
             switch(cuad.op){
                 case ":=":
-                    if(variables.contains(cuad.arg1))
+                    if( variables.contains(cuad.arg1 ) )
                         cmp.iuListener.mostrarCodObj("̣    mov ax, " + cuad.arg1);
                     else{
                         int arg1 = Integer.parseInt(cuad.arg1);
@@ -139,18 +150,24 @@ public class GenCodigoObj {
                 case "+":
                     if(variables.contains(cuad.arg1)){
                         cmp.iuListener.mostrarCodObj( "    mov ax, " + cuad.arg1 );
-                        cmp.iuListener.mostrarCodObj ( "    add ax, " + cuad.arg2 );
                     }
                     else{
                         int arg1 = Integer.parseInt(cuad.arg1);
                         String arg1ToHex = Integer.toHexString(arg1).toUpperCase();
                         cmp.iuListener.mostrarCodObj( "    mov ax, 0" + arg1ToHex + "h" );
                         
+                    }
+                    
+                    if(variables.contains(cuad.arg2)){
+                        cmp.iuListener.mostrarCodObj ( "    add ax, " + cuad.arg2 );
+
+                    }
+                    else{
                         int arg2 = Integer.parseInt(cuad.arg2);
                         String arg2ToHex = Integer.toHexString(arg2).toUpperCase();
                         cmp.iuListener.mostrarCodObj( "    add ax, 0" + arg2ToHex + "h" );
-                        
                     }
+                    
                     cmp.iuListener.mostrarCodObj ( "    mov " + cuad.resultado  + ", ax" );
                     cmp.iuListener.mostrarCodObj ( "" );
 
@@ -159,18 +176,24 @@ public class GenCodigoObj {
                 case "*":
                     if(variables.contains(cuad.arg1)){
                         cmp.iuListener.mostrarCodObj( "    mov ax, " + cuad.arg1 );
-                        cmp.iuListener.mostrarCodObj ( "    mul " + cuad.arg2 );
                     }
                     else{
                         int arg1 = Integer.parseInt(cuad.arg1);
                         String arg1ToHex = Integer.toHexString(arg1).toUpperCase();
                         cmp.iuListener.mostrarCodObj( "    mov ax, 0" + arg1ToHex + "h" );
-                        
+                    }
+                    
+                    if(variables.contains(cuad.arg2)){
+                        cmp.iuListener.mostrarCodObj( "    mov bx, " + cuad.arg2 );
+                        cmp.iuListener.mostrarCodObj ( "    mul " + "bx" );
+                    }
+                    else{
                         int arg2 = Integer.parseInt(cuad.arg2);
                         String arg2ToHex = Integer.toHexString(arg2).toUpperCase();
-                        cmp.iuListener.mostrarCodObj( "    mul 0" + arg2ToHex + "h" );
-                        
+                        cmp.iuListener.mostrarCodObj( "    mov bx, " + arg2ToHex );
+                        cmp.iuListener.mostrarCodObj ( "    mul " + "bx" );
                     }
+                    
                     cmp.iuListener.mostrarCodObj ( "    mov " + cuad.resultado  + ", ax" );
                     cmp.iuListener.mostrarCodObj ( "" );
                     
